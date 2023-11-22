@@ -11,6 +11,7 @@
 
 
 set<wstring> visitedPaths;
+vector<wstring> stringArray;
 
 HINTERNET hConnect;
 HINTERNET hInternet;
@@ -56,9 +57,7 @@ bool Network::connectServer(HWND hwnd, wchar_t* path){
 	}
 
 	count1++;
-	if (count1 > 500) { return false; };
-
-	SendMessage(GetDlgItem(hwnd, 101), LB_ADDSTRING, 0, (LPARAM)path);
+	if (count1 > 100) { return false; };
 	visitedPaths.insert(path);
 
 	if (hConnect) {
@@ -67,10 +66,32 @@ bool Network::connectServer(HWND hwnd, wchar_t* path){
 			LPCWSTR additionalHeaders = L"User-Agent: Lab2\r\nAccept: */*\r\n";
 			if (HttpSendRequest(hRequest, additionalHeaders, lstrlen(additionalHeaders), NULL, 0)) {
 				// Чтение ответа
+
+				wchar_t contentType[MAX_PATH];
+				DWORD bufferSize = MAX_PATH;
+				if (HttpQueryInfo(hRequest, HTTP_QUERY_CONTENT_TYPE, contentType, &bufferSize, NULL)) {
+					wchar_t serverInfo[MAX_PATH];
+					bufferSize = MAX_PATH;
+					if (HttpQueryInfo(hRequest, HTTP_QUERY_SERVER, serverInfo, &bufferSize, NULL)) {
+						int x = countSlashes(path);
+						wstring infoString = to_wstring(x) + L": " + L" " + wstring(path) +
+							L"     - (" + contentType + L", " + serverInfo + L")";
+						stringArray.push_back(infoString);
+						wcout << L"Server Version: " << serverInfo << endl;
+					}
+					else {
+						SetWindowText(GetDlgItem(hwnd, 2), L"Не удалось получить информацию о версии сервера");
+					}
+				}
+				else {
+					SetWindowText(GetDlgItem(hwnd, 2), L"Не удалось получить информацию о Content-Type");
+					return false;
+				}
+
 				char* buffer = nullptr;
 				DWORD totalBytesRead = 0;
 				DWORD bytesRead;
-				DWORD bufferSize = 8192; // Начальный размер буфера
+				bufferSize = 8192; // Начальный размер буфера
 
 				do {
 					buffer = (char*)realloc(buffer, totalBytesRead + bufferSize);
@@ -129,6 +150,15 @@ void Network::closeConnection(HWND hwnd)
 	InternetCloseHandle(hRequest);
 	InternetCloseHandle(hConnect);
 	InternetCloseHandle(hInternet);
+
+	std::sort(stringArray.begin(), stringArray.end(), [](const std::wstring& a, const std::wstring& b) {
+		return a[0] < b[0];
+	});
+
+	for (const auto& str : stringArray) {
+		LPCWSTR infoText = str.c_str();
+		SendMessage(GetDlgItem(hwnd, 101), LB_ADDSTRING, 10000, (LPARAM)infoText);
+	}
 }
 
 set<wstring> Network::extractLinksFromHTML(const char* htmlContent, DWORD contentSize)
@@ -161,3 +191,13 @@ bool Network::isRelativeURL(const std::wstring& url)
 	return url.find(L"http://") != 0 && url.find(L"https://") != 0;
 }
 
+int Network::countSlashes(const wchar_t* str){
+	int count = 0;
+	while (*str != L'\0') {
+		if (*str == L'/') {
+			count++;
+		}
+		str++;
+	}
+	return count;
+}

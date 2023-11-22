@@ -12,4 +12,5 @@ public:
 	void closeConnection(HWND hwnd);
 	std::set<std::wstring> extractLinksFromHTML(const char* htmlContent, DWORD contentSize);
 	bool isRelativeURL(const std::wstring& url);
+	int countSlashes(const wchar_t* str);
 };
