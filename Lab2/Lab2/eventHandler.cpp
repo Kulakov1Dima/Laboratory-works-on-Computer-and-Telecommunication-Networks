@@ -20,18 +20,15 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 				SetWindowText(GetDlgItem(hwnd, 2), messageBuffer);
 
 				Network getter(url);
-				if (getter.createSocket(hwnd)) {
-					if (getter.connectServer(hwnd)) {
-
+				if (getter.createAgent(hwnd)) {
+					if (getter.connectServer(hwnd, (wchar_t*)"/")) {
+						
 					}
 				}
 
+				getter.closeConnection(hwnd);
+
 			}
-			//wchar_t messageBuffer[256];
-			//wchar_t buffer[16];
-			//static int count = 0;
-			//swprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), L"Ёлемент %d", ++count);
-			//SendMessage(GetDlgItem(hwnd, 101), LB_ADDSTRING, 0, (LPARAM)buffer);
 		}
 		break;
 	}
