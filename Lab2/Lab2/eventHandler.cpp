@@ -1,9 +1,12 @@
 #include <wchar.h>
 #include <Windows.h>
+#include <time.h> 
 
 #include "eventHandler.h"
 #include "Logic.h"
 #include "Net.h"
+#include <thread>
+
 
 //http://imc.ssau.ru
 
@@ -19,15 +22,20 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 				swprintf(messageBuffer, sizeof(messageBuffer) / sizeof(messageBuffer[0]), L"Проверка завершена: %s", url);
 				SetWindowText(GetDlgItem(hwnd, 2), messageBuffer);
 
-				Network getter(url);
-				if (getter.createAgent(hwnd)) {
-					if (getter.connectServer(hwnd, (wchar_t*)"/")) {
-						
+				thread([hwnd, url]() {
+					clock_t start = clock();
+					Network getter(url);
+					if (getter.createAgent(hwnd)) {
+						getter.connectServer(hwnd, (wchar_t*)"/");
+						clock_t end = clock();
+						double seconds = (double)(end - start) / CLOCKS_PER_SEC;
+						wstring infotime = to_wstring(seconds) + L" c";
+						LPCWSTR infoT = infotime.c_str();
+						SetWindowText(GetDlgItem(hwnd, 7), infoT);
 					}
-				}
 
-				getter.closeConnection(hwnd);
-
+					getter.closeConnection(hwnd);
+				}).detach();
 			}
 		}
 		break;

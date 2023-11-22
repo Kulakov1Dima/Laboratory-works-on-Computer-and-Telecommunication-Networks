@@ -57,7 +57,7 @@ bool Network::connectServer(HWND hwnd, wchar_t* path){
 	}
 
 	count1++;
-	if (count1 > 100) { return false; };
+	if (count1 > 500) { return false; };
 	visitedPaths.insert(path);
 
 	if (hConnect) {

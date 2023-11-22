@@ -21,7 +21,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		0,
 		wc.lpszClassName,
 		L"Лабораторная работа №2 Кулаков Дмитрий 6303",
-		WS_OVERLAPPEDWINDOW & ~WS_SIZEBOX,
+		WS_OVERLAPPEDWINDOW & ~WS_SIZEBOX & ~WS_MAXIMIZEBOX,
 
 		CW_USEDEFAULT, CW_USEDEFAULT, 510, 350,
 
@@ -74,6 +74,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		0, 291, 498, 18,
 		hwnd,
 		(HMENU)2,
+		hInstance,
+		NULL
+	);
+
+	HWND timeinfo = CreateWindowEx(
+		0,
+		L"STATIC",
+		L"",
+		WS_CHILD | WS_VISIBLE | SS_LEFT,
+		410, 291, 80, 18,
+		hwnd,
+		(HMENU)7,
 		hInstance,
 		NULL
 	);
