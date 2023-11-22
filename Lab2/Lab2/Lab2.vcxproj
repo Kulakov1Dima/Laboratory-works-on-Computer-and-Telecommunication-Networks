@@ -139,11 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Logic.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="WindowLogic.cpp" />
+    <ClCompile Include="eventHandler.cpp" />
+    <ClCompile Include="Net.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="WindowLogic.h" />
+    <ClInclude Include="eventHandler.h" />
+    <ClInclude Include="Logic.h" />
+    <ClInclude Include="Net.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

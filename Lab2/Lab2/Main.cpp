@@ -1,5 +1,5 @@
 #include <Windows.h>
-#include "WindowLogic.h"
+#include "eventHandler.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
