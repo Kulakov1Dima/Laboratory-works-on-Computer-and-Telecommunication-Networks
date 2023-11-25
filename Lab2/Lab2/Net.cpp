@@ -57,7 +57,7 @@ bool Network::connectServer(HWND hwnd, wchar_t* path){
 	}
 
 	count1++;
-	if (count1 > 500) { return false; };
+	if (count1 > 1000) { return false; };
 	visitedPaths.insert(path);
 
 	if (hConnect) {
@@ -91,7 +91,7 @@ bool Network::connectServer(HWND hwnd, wchar_t* path){
 				char* buffer = nullptr;
 				DWORD totalBytesRead = 0;
 				DWORD bytesRead;
-				bufferSize = 8192; // Начальный размер буфера
+				bufferSize = 8192;
 
 				do {
 					buffer = (char*)realloc(buffer, totalBytesRead + bufferSize);
@@ -117,12 +117,11 @@ bool Network::connectServer(HWND hwnd, wchar_t* path){
 				std::set<std::wstring> extractedLinks = extractLinksFromHTML(buffer, totalBytesRead);
 
 				for (const auto& link : extractedLinks) {
-					// Вызываем connectServer рекурсивно для каждой ссылки
 					if (!connectServer(hwnd, const_cast<wchar_t*>(link.c_str()))) {
 						return false;
 					}
 				}
-				free(buffer); // Освобождение памяти
+				free(buffer);
 
 				return true;
 			}
@@ -171,7 +170,6 @@ set<wstring> Network::extractLinksFromHTML(const char* htmlContent, DWORD conten
 	wsregex_iterator regexIterator(htmlStr.begin(), htmlStr.end(), regexPattern);
 	wsregex_iterator endIterator;
 
-	// Проходим по всем найденным совпадениям
 	while (regexIterator != endIterator) {
 		std::wsmatch match = *regexIterator;
 		if (match.size() > 1) {
