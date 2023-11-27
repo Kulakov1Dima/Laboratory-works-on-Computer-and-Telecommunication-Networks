@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Лабораторная работа №3</title>
+    <style>
+        .custom-popup {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .popup-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Лабораторная работа №3 Кулаков Дмитрий 6303</h1>
+    
+    <label for="ftpAddress">Адрес FTP сервера:</label>
+    <input type="text" id="ftpAddress" placeholder="Введите адрес FTP сервера">
+    <br><br>
+
+    <button onclick="showPopup()">Подключиться к FTP серверу</button>
+
+    <div id="customPopup" class="custom-popup">
+        <div class="popup-content">
+            <h2>Введите логин и пароль</h2>
+            <label for="login">Логин:</label>
+            <input type="text" id="login" placeholder="Введите логин">
+            <br><br>
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" placeholder="Введите пароль">
+            <br><br>
+            <button onclick="connectFTP()">Подключить</button>
+            <button onclick="hidePopup()">Закрыть</button>
+        </div>
+    </div>
+
+    <script>
+        const socket = new WebSocket("ws://127.0.0.1/ws");
+
+        function showPopup() {
+            document.getElementById("customPopup").style.display = "block";
+        }
+
+        function hidePopup() {
+            document.getElementById("customPopup").style.display = "none";
+        }
+
+        function connectFTP() {
+            const ftpAddress = document.getElementById("ftpAddress").value;
+            const login = document.getElementById("login").value;
+            const password = document.getElementById("password").value;
+
+            if (ftpAddress !== "" && login !== "" && password !== "") {
+                socket.send(`connectFTP:${ftpAddress}:${login}:${password}`);
+                hidePopup();
+                alert('Подключение к FTP серверу...');
+            } else {
+                alert("Введите адрес FTP сервера, логин и пароль");
+            }
+        }
+
+        socket.onmessage = function(event) {
+            if (event.data.startsWith("success")) {
+                window.location.href = event.data;
+            } else if (event.data === "error") {
+                // Переходим на страницу ошибки
+                window.location.href = "/error";
+            }
+};
+    </script>
+</body>
+</html>

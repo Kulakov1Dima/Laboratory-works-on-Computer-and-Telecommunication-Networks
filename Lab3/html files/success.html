@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Password</title>
+</head>
+<body>
+    <h1>Login and Password</h1>
+
+    <div id="login-info">
+        <p id="login-label">Login:</p>
+        <p id="password-label">Password:</p>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        const login = urlParams.get('login');
+        const password = urlParams.get('password');
+
+        document.getElementById('login-label').innerText += ` ${login}`;
+        document.getElementById('password-label').innerText += ` ${password}`;
+    </script>
+</body>
+</html>
