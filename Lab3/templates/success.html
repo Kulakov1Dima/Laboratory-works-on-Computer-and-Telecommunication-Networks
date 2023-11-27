@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Файлы</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            padding: 5px;
+            background-color: #fff;
+            margin-bottom: 2px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+        .total-size {
+            color: green;
+        }
+        .total-file-size {
+            color: red;
+        }
+        .file-icon {
+            margin-right: 10px;
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Список файлов</h1>
+    <ul>
+        {% for file, size in files %}
+            {% if file.endswith(".png") %}
+                <li><img src="static/iconpng.png" alt="xlsx icon" class="file-icon">{{ file }}: {{ size }} bytes</li>
+            {% elif file.endswith(".jpg") %}
+                <li><img src="static/jpg.png" alt="xlsx icon" class="file-icon">{{ file }}: {{ size }} bytes</li>
+            {% elif file.endswith(".zip") %}
+                <li><img src="static/zip.png" alt="xlsx icon" class="file-icon">{{ file }}: {{ size }} bytes</li>
+            {% elif file.endswith(".pdf") %}
+                <li><img src="static/pdf.png" alt="xlsx icon" class="file-icon">{{ file }}: {{ size }} bytes</li>
+            {% elif file.endswith(".xlsx") %}
+                <li><img src="static/xlsx-icon.png" alt="xlsx icon" class="file-icon">{{ file }}: {{ size }} bytes</li>
+            {% elif file.endswith(".doc") %}
+                <li><img src="static/doc-icon.png" alt="doc icon" class="file-icon">{{ file }}: {{ size }} bytes</li>
+            {% elif file.endswith(".pptx") %}
+                <li><img src="static/pptx-icon.png" alt="pptx icon" class="file-icon">{{ file }}: {{ size }} bytes</li>
+            {% elif file.startswith("Total file size") %}
+                <li class="total-file-size">{{ file }}: {{ size }} bytes</li>
+            {% elif file.startswith("Total size") %}
+                <li class="total-size">{{ file }}: {{ size }} bytes</li>
+            {% else %}
+                <li>{{ file }}: {{ size }} bytes</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</body>
+</html>
