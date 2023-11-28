@@ -23,7 +23,11 @@ class FTPserver:
                 else:
                     file_size = int(file_info[4])
                     extension = os.path.splitext(name)[1][1:]
-                    self.file_info.append([full_path, file_size])
+
+                    new_entry = [full_path, file_size]
+
+                    if all(entry[0] != full_path for entry in self.file_info):
+                        self.file_info.append(new_entry)
             except Exception as e:
                 print(f"Error processing file/directory {full_path}: {str(e)}")
 
