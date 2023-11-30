@@ -22,7 +22,6 @@ class FTPserver:
                     self.list_ftp_directory(ftp_server, ftp_username, ftp_password, path + '/' + folder_name)
                 else:
                     file_size = int(file_info[4])
-                    extension = os.path.splitext(name)[1][1:]
 
                     new_entry = [full_path, file_size]
 
