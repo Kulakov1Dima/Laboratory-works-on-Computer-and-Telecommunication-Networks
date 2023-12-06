@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .email-form {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #fff;
+            margin-bottom: 20px;
+        }
+        input[type="text"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="button"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="button"]:hover {
+            background-color: #45a049;
+        }
+        label {
+            margin-top: 10px;
+            display: block;
+        }
+        #emailLabel,
+        #passwdLabel,
+        #senderEmailLabel,
+        #messageLabel,
+        #filePathLabel,
+        #subjectLabel {
+            font-weight: bold;
+        }
+        #sendButton {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-form">
+        <label for="email" id="emailLabel">Введите почту:</label>
+        <input type="text" id="email" name="email">
+        <label for="passwd" id="passwdLabel">Введите пароль:</label>
+        <input type="password" id="passwd" name="passwd">
+        <label for="senderEmail" id="senderEmailLabel">Введите адрес получателя:</label>
+        <input type="text" id="senderEmail" name="senderEmail">
+        <label for="subject" id="subjectLabel">Тема письма:</label>
+        <input type="text" id="subject" name="subject">
+        <label for="message" id="messageLabel">Введите ваше сообщение:</label>
+        <textarea id="message" name="message" rows="5" cols="40"></textarea>
+        <label for="filePath" id="filePathLabel">Путь к файлу:</label>
+        <input type="text" id="filePath" name="filePath">
+    </div>
+    <input type="button" value="Отправить" id="sendButton" onclick="sendData()">
+
+    <script>
+        const socket = new WebSocket("ws://127.0.0.1/ws");
+    
+        function sendData() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("passwd").value;
+            const senderEmail = document.getElementById("senderEmail").value;
+            const subject = document.getElementById("subject").value;
+            const message = document.getElementById("message").value;
+            const filePath = document.getElementById("filePath").value;
+    
+            if (email === "" || password === "" || senderEmail === "" || message === "" || subject === "") {
+                alert("Введите адрес почты, пароль, адрес получателя и сообщение");
+            } else {
+                socket.send(`connectSmtp+${email}+${password}+${senderEmail}+${subject}+${message}+${filePath}`);
+                alert('Подключение к серверу...');
+            }
+        }
+    
+        socket.onmessage = function(event) {
+            if (event.data === "True") {
+                window.location.href = "/mail";
+            } else if (event.data === "False") {
+                window.location.href = "/error";
+            } else {
+                const emailLabel = document.getElementById("emailLabel");
+                emailLabel.innerHTML = `Почта для: ${event.data}`;
+            }
+        };
+    </script>
+</body>
+</html>
