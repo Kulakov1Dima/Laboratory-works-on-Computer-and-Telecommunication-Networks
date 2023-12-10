@@ -48,7 +48,8 @@
         #senderEmailLabel,
         #messageLabel,
         #filePathLabel,
-        #subjectLabel {
+        #subjectLabel,
+        #portLabel {
             font-weight: bold;
         }
         #sendButton {
@@ -70,6 +71,8 @@
         <textarea id="message" name="message" rows="5" cols="40"></textarea>
         <label for="filePath" id="filePathLabel">Путь к файлу:</label>
         <input type="text" id="filePath" name="filePath">
+        <label for="port" id="portLabel">Введите порт:</label>
+        <input type="text" id="port" name="port">
     </div>
     <input type="button" value="Отправить" id="sendButton" onclick="sendData()">
 
@@ -83,11 +86,12 @@
             const subject = document.getElementById("subject").value;
             const message = document.getElementById("message").value;
             const filePath = document.getElementById("filePath").value;
+            const port = document.getElementById("port").value;
     
-            if (email === "" || password === "" || senderEmail === "" || message === "" || subject === "") {
-                alert("Введите адрес почты, пароль, адрес получателя и сообщение");
+            if (email === "" || password === "" || senderEmail === "" || message === "" || subject === "" || port === "") {
+                alert("Введите адрес почты, пароль, адрес получателя, сообщение и порт");
             } else {
-                socket.send(`connectSmtp+${email}+${password}+${senderEmail}+${subject}+${message}+${filePath}`);
+                socket.send(`connectSmtp+${email}+${password}+${senderEmail}+${subject}+${message}+${filePath}+${port}`);
                 alert('Подключение к серверу...');
             }
         }

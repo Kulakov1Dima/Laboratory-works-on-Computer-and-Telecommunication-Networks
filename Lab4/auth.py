@@ -23,7 +23,6 @@ def send_email(host, port, email, password, to_addr, subject, body_text, file_pa
                 part.set_payload(attachment.read())
             encoders.encode_base64(part)
 
-            # Явное кодирование имени файла
             part.add_header(
                 "Content-Disposition",
                 "attachment",
