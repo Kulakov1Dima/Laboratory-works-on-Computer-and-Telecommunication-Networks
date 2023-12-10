@@ -21,22 +21,8 @@ async def read_root():
 async def read_root():
     return "Письмо отправлено"
 
-@app.get("/smtp.yandex.ru")
+@app.get("/smtp")
 async def read_root():
-    global emailform
-    emailform = "yandex.ru"
-    return FileResponse("html files/auth.html")
-
-@app.get("/smtp.gmail.com")
-async def read_root():
-    global emailform
-    emailform = "gmail.com"
-    return FileResponse("html files/auth.html")
-
-@app.get("/smtp.mail.ru")
-async def read_root():
-    global emailform
-    emailform = "mail.ru"
     return FileResponse("html files/auth.html")
 
 @app.websocket("/ws")
@@ -46,10 +32,11 @@ async def websocket_endpoint(websocket: WebSocket):
         data = await websocket.receive_text()
         if data.startswith("connectSmtp"):
             _, email, password, senderEmail, subject, message, file_path = data.split("+")
+            emailform =  email.split("@")[1]
             await websocket.send_text(emailform)
             listto = senderEmail.split(",")
             for to in listto:
-                await websocket.send_text(send_email(f'smtp.{emailform}', 587, f'{email}@{emailform}', password, to, subject, message, file_path))
+                await websocket.send_text(send_email(f'smtp.{emailform}', 587, email, password, to, subject, message, file_path))
             break
 
 if __name__ == "__main__":

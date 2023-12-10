@@ -7,6 +7,7 @@ from email.header import Header
 import os
 
 def send_email(host, port, email, password, to_addr, subject, body_text, file_path=None):
+    print(host)
     try:
         message = MIMEMultipart()
         message["From"] = email
